@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Screenshot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <style>
+        #screenshot {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        #captureArea {
+            width: 100%;
+            height: 500px;
+            background: lightgray;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Capture Screenshot</h1>
+    <div id="captureArea">
+        <h2>This is the area we will capture</h2>
+        <p>Click the button to take a screenshot of this section.</p>
+    </div>
+    <button onclick="captureScreenshot()">Capture Screenshot</button>
+    <img id="screenshot" src="" alt="Screenshot will appear here">
 
+    <script>
+        function captureScreenshot() {
+            // Select the area you want to capture
+            const captureArea = document.getElementById('captureArea');
+
+            // Use html2canvas to capture the screenshot of the selected area
+            html2canvas(captureArea).then(function(canvas) {
+                // Convert the canvas to an image URL
+                const img = canvas.toDataURL();
+                // Display the screenshot image
+                document.getElementById('screenshot').src = img;
+            });
+        }
+    </script>
+</body>
+</html>
