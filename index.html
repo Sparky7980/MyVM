@@ -3,58 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Screenshot and Upload</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <title>Live Screenshot</title>
     <style>
         #screenshot {
             width: 100%;
             height: auto;
             border: 1px solid #ddd;
         }
-        #captureArea {
-            width: 100%;
-            height: 500px;
-            background: lightgray;
-            text-align: center;
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
-    <h1>Capture Screenshot and Upload</h1>
-    <div id="captureArea">
-        <h2>This is the area we will capture</h2>
-        <p>Click the button to take a screenshot of this section.</p>
-    </div>
-    <button onclick="captureScreenshot()">Capture Screenshot</button>
-    <img id="screenshot" src="" alt="Screenshot will appear here">
+    <h1>Live Screenshot</h1>
+    <img id="screenshot" src="" alt="Live Screenshot" />
 
     <script>
-        function captureScreenshot() {
-            const captureArea = document.getElementById('captureArea');
-            html2canvas(captureArea).then(function(canvas) {
-                const img = canvas.toDataURL(); // Get base64 encoded image data
-                document.getElementById('screenshot').src = img; // Display screenshot in the browser
-                
-                // Now, send the screenshot to the Python server
-                fetch('https://your-python-server.vercel.app/upload_screenshot', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        screenshot: img
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Screenshot uploaded:', data);
+        function updateScreenshot() {
+            // Fetch the latest screenshot from the Flask server
+            fetch('http://localhost:5000/screenshot')
+                .then(response => response.blob())
+                .then(imageBlob => {
+                    // Create an object URL for the image blob
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    document.getElementById('screenshot').src = imageObjectURL;
                 })
                 .catch(error => {
-                    console.error('Error uploading screenshot:', error);
+                    console.error('Error fetching screenshot:', error);
                 });
-            });
         }
+
+        // Update the screenshot every second
+        setInterval(updateScreenshot, 1000);
     </script>
 </body>
 </html>
