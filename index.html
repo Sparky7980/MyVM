@@ -18,7 +18,7 @@
 
     <script>
         function updateScreenshot() {
-            // Fetch the latest screenshot from the Flask server
+            // Fetch the latest screenshot from the Python server
             fetch('http://localhost:5000/screenshot')
                 .then(response => response.blob())
                 .then(imageBlob => {
