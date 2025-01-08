@@ -19,7 +19,7 @@
     <script>
         function updateScreenshot() {
             // Fetch the latest screenshot from the Flask server using your public IP address
-            fetch('http://73.181.172.161:5000/screenshot')
+            fetch('http://192.168.7.16:5000/screenshot')
                 .then(response => response.blob())
                 .then(imageBlob => {
                     // Create an object URL for the image blob
