@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capture Screenshot</title>
+    <title>Capture Screenshot and Upload</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <style>
         #screenshot {
@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-    <h1>Capture Screenshot</h1>
+    <h1>Capture Screenshot and Upload</h1>
     <div id="captureArea">
         <h2>This is the area we will capture</h2>
         <p>Click the button to take a screenshot of this section.</p>
@@ -31,15 +31,28 @@
 
     <script>
         function captureScreenshot() {
-            // Select the area you want to capture
             const captureArea = document.getElementById('captureArea');
-
-            // Use html2canvas to capture the screenshot of the selected area
             html2canvas(captureArea).then(function(canvas) {
-                // Convert the canvas to an image URL
-                const img = canvas.toDataURL();
-                // Display the screenshot image
-                document.getElementById('screenshot').src = img;
+                const img = canvas.toDataURL(); // Get base64 encoded image data
+                document.getElementById('screenshot').src = img; // Display screenshot in the browser
+                
+                // Now, send the screenshot to the Python server
+                fetch('https://your-python-server.vercel.app/upload_screenshot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        screenshot: img
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Screenshot uploaded:', data);
+                })
+                .catch(error => {
+                    console.error('Error uploading screenshot:', error);
+                });
             });
         }
     </script>
